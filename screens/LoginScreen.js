@@ -11,7 +11,6 @@ import {
   TouchableWithoutFeedback, // імпорт компонента обгортки
   Keyboard, // імпорт компонента клавіатури
 } from "react-native";
-// import ImageP from "./1.png";
 const initialState = {
   email: "",
   password: "",
@@ -147,7 +146,6 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   form: {
-    // position: "relative",
     paddingHorizontal: 16,
 
     borderTopRightRadius: 25,
@@ -201,7 +199,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   textLogIn: {
-    // textAlign: "center",
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     color: "#1B4371",

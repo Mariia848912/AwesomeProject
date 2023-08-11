@@ -243,7 +243,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   textLogIn: {
-    // textAlign: "center",
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     color: "#1B4371",
