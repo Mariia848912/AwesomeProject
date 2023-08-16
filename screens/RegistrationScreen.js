@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -26,24 +26,39 @@ export default function RegistrationScreen() {
   const [isFocusedName, setIsFocusedName] = useState(false);
   const [isShow, setShow] = useState(true);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      " keyboardDidShow",
+      () => {
+        setIsShowKeyboard(true);
+      }
+    );
+
+    const keyvoardDidHideListener = Keyboard.addListener(
+      " keyboardDidShow",
+      () => {
+        setIsShowKeyboard(false);
+      }
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyvoardDidHideListener.remove();
+    };
+  }, []);
+
   const focusOnName = () => {
-    setIsShowKeyboard(true);
     setIsFocusedName(true);
   };
   const focusOnEmail = () => {
-    setIsShowKeyboard(true);
     setIsFocusedEmail(true);
   };
   const focusOnPassword = () => {
-    setIsShowKeyboard(true);
     setIsFocusedPassword(true);
   };
   const keyboardHide = () => {
-    setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
   const submitForm = () => {
-    setIsShowKeyboard(false);
     Keyboard.dismiss();
     setState(initialState);
     console.log(state);
@@ -63,7 +78,16 @@ export default function RegistrationScreen() {
           {/* <KeyboardAvoidingView // визначаємо ОС та налаштовуємо поведінку клавіатури
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           > */}
-          <View style={styles.form}>
+          <View
+            style={{
+              ...styles.form,
+              paddingBottom: isShowKeyboard
+                ? Platform.OS === "ios"
+                  ? 20
+                  : 190
+                : 60,
+            }}
+          >
             <View style={styles.boxAddPhoto}>
               <View style={styles.photo}>
                 <View style={styles.icon}>
@@ -130,16 +154,7 @@ export default function RegistrationScreen() {
             >
               <Text style={styles.btnTitle}>Зареєстуватися</Text>
             </TouchableOpacity>
-            <View
-              style={{
-                ...styles.wrapLogIn,
-                marginBottom: isShowKeyboard
-                  ? Platform.OS === "ios"
-                    ? 20
-                    : 190
-                  : 60,
-              }}
-            >
+            <View style={styles.wrapLogIn}>
               <Text style={styles.textLogIn}>Вже є акаунт? Увійти</Text>
             </View>
           </View>
@@ -149,6 +164,15 @@ export default function RegistrationScreen() {
     </TouchableWithoutFeedback>
   );
 }
+
+//  style={{
+//                 ...styles.wrapLogIn,
+//                 marginBottom: isShowKeyboard
+//                   ? Platform.OS === "ios"
+//                     ? 20
+//                     : 190
+//                   : 60,
+//               }}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -23,20 +23,36 @@ export default function LoginScreen() {
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [isShow, setShow] = useState(true);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      " keyboardDidShow",
+      () => {
+        setIsShowKeyboard(true);
+      }
+    );
+
+    const keyvoardDidHideListener = Keyboard.addListener(
+      " keyboardDidShow",
+      () => {
+        setIsShowKeyboard(false);
+      }
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyvoardDidHideListener.remove();
+    };
+  }, []);
+
   const focusOnEmail = () => {
-    setIsShowKeyboard(true);
     setIsFocusedEmail(true);
   };
   const focusOnPassword = () => {
-    setIsShowKeyboard(true);
     setIsFocusedPassword(true);
   };
   const keyboardHide = () => {
-    setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
   const submitForm = () => {
-    setIsShowKeyboard(false);
     Keyboard.dismiss();
     setState(initialState);
     console.log(state);
