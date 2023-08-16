@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,38 +11,65 @@ import {
   TouchableWithoutFeedback, // імпорт компонента обгортки
   Keyboard, // імпорт компонента клавіатури
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
 const initialState = {
+  name: "",
   email: "",
   password: "",
 };
 
-export default function LoginScreen() {
+export default function RegistrationScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+  const [isFocusedName, setIsFocusedName] = useState(false);
   const [isShow, setShow] = useState(true);
+  const navigation = useNavigation();
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      " keyboardDidShow",
+      () => {
+        setIsShowKeyboard(true);
+      }
+    );
 
+    const keyvoardDidHideListener = Keyboard.addListener(
+      " keyboardDidShow",
+      () => {
+        setIsShowKeyboard(false);
+      }
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyvoardDidHideListener.remove();
+    };
+  }, []);
+
+  const focusOnName = () => {
+    setIsFocusedName(true);
+  };
   const focusOnEmail = () => {
-    setIsShowKeyboard(true);
     setIsFocusedEmail(true);
   };
   const focusOnPassword = () => {
-    setIsShowKeyboard(true);
     setIsFocusedPassword(true);
   };
   const keyboardHide = () => {
-    setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
   const submitForm = () => {
-    setIsShowKeyboard(false);
+    const { name, email, password } = state;
+    navigation.navigate("Home", { user: { name, email, password } });
+
     Keyboard.dismiss();
     setState(initialState);
     console.log(state);
   };
 
-  const showPassword = () => {
+  const setShowPassword = () => {
     setShow((isShow) => !isShow);
   };
 
@@ -50,18 +77,45 @@ export default function LoginScreen() {
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
         <ImageBackground
-          source={require("../assets/images/bg.jpg")}
+          source={require("../../assets/images/bg.jpg")}
           style={styles.image}
         >
           {/* <KeyboardAvoidingView // визначаємо ОС та налаштовуємо поведінку клавіатури
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           > */}
-          <View style={styles.form}>
-            <View>
-              <View></View>
+          <View
+            style={{
+              ...styles.form,
+              paddingBottom: isShowKeyboard
+                ? Platform.OS === "ios"
+                  ? 20
+                  : 190
+                : 60,
+            }}
+          >
+            <View style={styles.boxAddPhoto}>
+              <View style={styles.photo}>
+                <View style={styles.icon}>
+                  <AntDesign name="pluscircleo" size={24} color="#FF6C00" />
+                </View>
+              </View>
             </View>
-            <Text style={styles.title}>Увійти</Text>
-
+            <Text style={styles.title}>Реєстрація</Text>
+            <View style={{ marginBottom: 16 }}>
+              <TextInput
+                style={[
+                  styles.input,
+                  isFocusedName && { borderColor: "#FF6C00" },
+                ]}
+                placeholder="Логін"
+                onFocus={focusOnName}
+                onBlur={() => setIsFocusedName(false)}
+                value={state.name}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, name: value }))
+                }
+              />
+            </View>
             <View style={{ marginBottom: 16 }}>
               <TextInput
                 style={[
@@ -84,7 +138,7 @@ export default function LoginScreen() {
                   isFocusedPassword && { borderColor: "#FF6C00" },
                 ]}
                 placeholder="Пароль"
-                secureTextEntry={isShow}
+                secureTextEntry={true}
                 onFocus={focusOnPassword}
                 onBlur={() => setIsFocusedPassword(false)}
                 value={state.password}
@@ -93,7 +147,7 @@ export default function LoginScreen() {
                 }
               />
               <TouchableOpacity activeOpacity={0.8} style={styles.showBtn}>
-                <Text style={styles.textShowBtn} onPress={showPassword}>
+                <Text style={styles.textShowBtn} onPress={setShowPassword}>
                   Показати
                 </Text>
               </TouchableOpacity>
@@ -103,21 +157,16 @@ export default function LoginScreen() {
               activeOpacity={0.8}
               onPress={submitForm}
             >
-              <Text style={styles.btnTitle}>Увійти</Text>
+              <Text style={styles.btnTitle}>Зареєстуватися</Text>
             </TouchableOpacity>
-            <View
-              style={{
-                ...styles.wrapLogIn,
-                marginBottom: isShowKeyboard
-                  ? Platform.OS === "ios"
-                    ? 20
-                    : 190
-                  : 111,
-              }}
-            >
-              <Text style={styles.textLogIn}>
-                Немає акаунту? Зареєструватися
-              </Text>
+            <View style={styles.wrapLogIn}>
+              <Text style={styles.textLogIn}>Вже є акаунт?</Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => navigation.navigate("Login")}
+              >
+                <Text style={styles.textLogIn}> Увійти</Text>
+              </TouchableOpacity>
             </View>
           </View>
           {/* </KeyboardAvoidingView> */}
@@ -126,6 +175,15 @@ export default function LoginScreen() {
     </TouchableWithoutFeedback>
   );
 }
+
+//  style={{
+//                 ...styles.wrapLogIn,
+//                 marginBottom: isShowKeyboard
+//                   ? Platform.OS === "ios"
+//                     ? 20
+//                     : 190
+//                   : 60,
+//               }}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -137,7 +195,7 @@ const styles = StyleSheet.create({
     color: "#212121",
     textAlign: "center",
     marginBottom: 33,
-    marginTop: 32,
+    marginTop: 92,
   },
   image: {
     flex: 1,
@@ -146,11 +204,32 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   form: {
+    position: "relative",
     paddingHorizontal: 16,
 
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     backgroundColor: "#FFF",
+  },
+  boxAddPhoto: {
+    position: "absolute",
+    top: -60,
+    right: 0,
+    left: 0,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  photo: {
+    position: "relative",
+    width: 120,
+    height: 120,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 16,
+  },
+  icon: {
+    position: "absolute",
+    right: -12,
+    bottom: 14,
   },
   input: {
     paddingTop: 16,
