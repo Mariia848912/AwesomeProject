@@ -11,20 +11,20 @@ import {
   TouchableWithoutFeedback, // імпорт компонента обгортки
   Keyboard, // імпорт компонента клавіатури
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
 const initialState = {
-  name: "",
   email: "",
   password: "",
 };
 
-export default function RegistrationScreen() {
+export default function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
-  const [isFocusedName, setIsFocusedName] = useState(false);
   const [isShow, setShow] = useState(true);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -46,9 +46,6 @@ export default function RegistrationScreen() {
     };
   }, []);
 
-  const focusOnName = () => {
-    setIsFocusedName(true);
-  };
   const focusOnEmail = () => {
     setIsFocusedEmail(true);
   };
@@ -59,12 +56,14 @@ export default function RegistrationScreen() {
     Keyboard.dismiss();
   };
   const submitForm = () => {
+    const { email, password } = state;
+    navigation.navigate("Home", { user: { email, password } });
     Keyboard.dismiss();
-    setState(initialState);
     console.log(state);
+    setState(initialState);
   };
 
-  const setShowPassword = () => {
+  const showPassword = () => {
     setShow((isShow) => !isShow);
   };
 
@@ -72,45 +71,18 @@ export default function RegistrationScreen() {
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
         <ImageBackground
-          source={require("../assets/images/bg.jpg")}
+          source={require("../../assets/images/bg.jpg")}
           style={styles.image}
         >
           {/* <KeyboardAvoidingView // визначаємо ОС та налаштовуємо поведінку клавіатури
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           > */}
-          <View
-            style={{
-              ...styles.form,
-              paddingBottom: isShowKeyboard
-                ? Platform.OS === "ios"
-                  ? 20
-                  : 190
-                : 60,
-            }}
-          >
-            <View style={styles.boxAddPhoto}>
-              <View style={styles.photo}>
-                <View style={styles.icon}>
-                  <AntDesign name="pluscircleo" size={24} color="#FF6C00" />
-                </View>
-              </View>
+          <View style={styles.form}>
+            <View>
+              <View></View>
             </View>
-            <Text style={styles.title}>Реєстрація</Text>
-            <View style={{ marginBottom: 16 }}>
-              <TextInput
-                style={[
-                  styles.input,
-                  isFocusedName && { borderColor: "#FF6C00" },
-                ]}
-                placeholder="Логін"
-                onFocus={focusOnName}
-                onBlur={() => setIsFocusedName(false)}
-                value={state.name}
-                onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, name: value }))
-                }
-              />
-            </View>
+            <Text style={styles.title}>Увійти</Text>
+
             <View style={{ marginBottom: 16 }}>
               <TextInput
                 style={[
@@ -133,7 +105,7 @@ export default function RegistrationScreen() {
                   isFocusedPassword && { borderColor: "#FF6C00" },
                 ]}
                 placeholder="Пароль"
-                secureTextEntry={true}
+                secureTextEntry={isShow}
                 onFocus={focusOnPassword}
                 onBlur={() => setIsFocusedPassword(false)}
                 value={state.password}
@@ -142,7 +114,7 @@ export default function RegistrationScreen() {
                 }
               />
               <TouchableOpacity activeOpacity={0.8} style={styles.showBtn}>
-                <Text style={styles.textShowBtn} onPress={setShowPassword}>
+                <Text style={styles.textShowBtn} onPress={showPassword}>
                   Показати
                 </Text>
               </TouchableOpacity>
@@ -152,10 +124,34 @@ export default function RegistrationScreen() {
               activeOpacity={0.8}
               onPress={submitForm}
             >
-              <Text style={styles.btnTitle}>Зареєстуватися</Text>
+              <Text style={styles.btnTitle}>Увійти</Text>
             </TouchableOpacity>
-            <View style={styles.wrapLogIn}>
-              <Text style={styles.textLogIn}>Вже є акаунт? Увійти</Text>
+            <View
+              style={{
+                ...styles.wrapLogIn,
+                marginBottom: isShowKeyboard
+                  ? Platform.OS === "ios"
+                    ? 20
+                    : 190
+                  : 111,
+              }}
+            >
+              <Text style={styles.textLogIn}>Немає акаунту?</Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => navigation.navigate("Registration")}
+              >
+                <Text
+                  style={{
+                    ...styles.textLogIn,
+                    textDecorationLine: "underline",
+                  }}
+                  textDecorationLine
+                >
+                  {" "}
+                  Зареєструватися
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           {/* </KeyboardAvoidingView> */}
@@ -164,15 +160,6 @@ export default function RegistrationScreen() {
     </TouchableWithoutFeedback>
   );
 }
-
-//  style={{
-//                 ...styles.wrapLogIn,
-//                 marginBottom: isShowKeyboard
-//                   ? Platform.OS === "ios"
-//                     ? 20
-//                     : 190
-//                   : 60,
-//               }}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -184,7 +171,7 @@ const styles = StyleSheet.create({
     color: "#212121",
     textAlign: "center",
     marginBottom: 33,
-    marginTop: 92,
+    marginTop: 32,
   },
   image: {
     flex: 1,
@@ -193,32 +180,11 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   form: {
-    position: "relative",
     paddingHorizontal: 16,
 
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     backgroundColor: "#FFF",
-  },
-  boxAddPhoto: {
-    position: "absolute",
-    top: -60,
-    right: 0,
-    left: 0,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  photo: {
-    position: "relative",
-    width: 120,
-    height: 120,
-    backgroundColor: "#F6F6F6",
-    borderRadius: 16,
-  },
-  icon: {
-    position: "absolute",
-    right: -12,
-    bottom: 14,
   },
   input: {
     paddingTop: 16,
