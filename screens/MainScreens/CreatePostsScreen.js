@@ -1,15 +1,12 @@
-import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-
-export default function PostScreen() {
+export default function CreatePostsScreen() {
   return (
     <View style={styles.container}>
-      <Text>PostScreen</Text>
+      <Text>CreatePostsScreen</Text>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

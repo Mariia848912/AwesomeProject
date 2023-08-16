@@ -22,22 +22,16 @@ export default function App() {
   return (
     <>
       <NavigationContainer>
-        <AuthStack.Navigator initialRouteName="Login">
+        <AuthStack.Navigator
+          initialRouteName="Login"
+          screenOptions={{ headerShown: false }}
+        >
           <AuthStack.Screen
             name="Registration"
             component={RegistrationScreen}
-            options={{ headerShown: false }}
           />
-          <AuthStack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
-          <AuthStack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ title: "Start screen" }}
-          />
+          <AuthStack.Screen name="Login" component={LoginScreen} />
+          <AuthStack.Screen name="Home" component={HomeScreen} />
         </AuthStack.Navigator>
       </NavigationContainer>
     </>
