@@ -10,8 +10,13 @@ import {
   Platform,
   TouchableWithoutFeedback, // імпорт компонента обгортки
   Keyboard, // імпорт компонента клавіатури
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "../../redux/auth/authOperations";
+import { authStateChange } from "../../redux/auth/authReducer";
 
 const initialState = {
   email: "",
@@ -25,6 +30,7 @@ export default function LoginScreen() {
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [isShow, setShow] = useState(true);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -59,6 +65,8 @@ export default function LoginScreen() {
     const { email, password } = state;
     navigation.navigate("Home", { user: { email, password } });
     Keyboard.dismiss();
+    dispatch(authSignInUser(state));
+    dispatch(authStateChange({ stateChange: true }));
     console.log(state);
     setState(initialState);
   };
