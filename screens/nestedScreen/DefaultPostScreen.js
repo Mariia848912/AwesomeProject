@@ -36,8 +36,6 @@ const DefaultScreen = ({ route, navigation }) => {
   const nikename = useSelector(selectNikename);
   const email = useSelector(selectEmail);
   const userId = useSelector(selectUserId);
-  console.log("nikenameeeeeeeeeeee", nikename);
-  console.log("posts", posts);
 
   const getPosts = async () => {
     try {
@@ -56,7 +54,6 @@ const DefaultScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     getPosts();
-    console.log("posts", posts);
   }, []);
 
   return (

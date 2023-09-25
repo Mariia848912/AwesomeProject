@@ -42,42 +42,10 @@ export default function CreatePostsScreen({ navigation }) {
   useEffect(() => {
     (async () => {
       let { status } = await Camera.requestCameraPermissionsAsync();
-      // console.log("status", status);
       await MediaLibrary.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
-
-    // (async () => {
-    //   let { status } = await Location.requestForegroundPermissionsAsync();
-    //   if (status !== "granted") {
-    //     console.log("Permission to access location was denied");
-    //   }
-
-    //   let location = await Location.getCurrentPositionAsync({});
-    //   const coords = {
-    //     latitude: location.coords.latitude,
-    //     longitude: location.coords.longitude,
-    //   };
-    //   setPostLocation(coords);
-    // })();
   }, []);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestPermissionsAsync();
-  //     if (status !== "granted") {
-  //       console.log("Permission to access location was denied");
-  //     }
-  //   })();
-
-  //   //   let location = await Location.getCurrentPositionAsync({});
-  //   //   const coords = {
-  //   //     latitude: location.coords.latitude,
-  //   //     longitude: location.coords.longitude,
-  //   //   };
-  //   //   setPostLocation(coords);
-  //   // })();
-  // }, []);
 
   if (hasPermission === null) {
     return <View />;
@@ -88,17 +56,12 @@ export default function CreatePostsScreen({ navigation }) {
 
   const getLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
-    // console.log("statussssssss", status);
     if (status !== "granted") {
       console.log("Permission to access location was denied");
     }
-    // console.log("getLocation");
-    // console.log("Location", Location);
+
     let location = await Location.getCurrentPositionAsync({});
-    // .then((response) => response)
-    // .catch((error) => console.log(error));
-    // console.log("location!!!!!", location);
-    // console.log("hasPermission", hasPermission);
+
     const coords = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
@@ -107,15 +70,12 @@ export default function CreatePostsScreen({ navigation }) {
   };
 
   const takePhoto = async () => {
-    // console.log("takePhoto!!!!!!!");
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
 
       await MediaLibrary.createAssetAsync(uri);
-      // console.log("cameraRef3");
 
       await getLocation();
-      // console.log("cameraRef4");
 
       setPostPhoto(uri);
     }
@@ -142,7 +102,6 @@ export default function CreatePostsScreen({ navigation }) {
 
   const uploadPostToServer = async () => {
     const photo = await uploadPhotoToServer(postPhoto);
-    // console.log("photo creqte post screen", photo);
     const newPost = {
       userId,
       nikename,
@@ -153,11 +112,8 @@ export default function CreatePostsScreen({ navigation }) {
       comments: [],
     };
 
-    // console.log("submit", newPost);
-
     try {
       const docRef = await addDoc(collection(db, "posts"), newPost);
-      // console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.error("Error adding document: ", error.message);
     }

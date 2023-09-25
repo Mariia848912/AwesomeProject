@@ -41,7 +41,6 @@ const CommentScreen = ({ route, navigation }) => {
   const email = useSelector(selectEmail);
   const userId = useSelector(selectUserId);
 
-  // console.log("comment route", route);
   const { id: postId, photo, userId: ownerId } = route.params;
 
   const createComment = async () => {
