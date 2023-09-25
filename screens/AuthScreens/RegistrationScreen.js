@@ -84,18 +84,18 @@ export default function RegistrationScreen() {
   const submitForm = async () => {
     console.log("submitForm");
     // const { name, email, password } = state;
-    // navigation.navigate("Home", { user: { name, email, password } });
+
     console.log("avatar", avatar);
     const photo = await uploadImageToServer(avatar);
     console.log("after uploadImageToServer");
     console.log(photo, nikename, email, password);
-    dispatch(authSignUpUser({ photo, nikename, email, password }));
-    dispatch(authStateChange({ stateChange: true }));
+    if (photo && nikename && email && password) {
+      dispatch(authSignUpUser({ photo, nikename, email, password }));
+      dispatch(authStateChange({ stateChange: true }));
 
+      clearForm();
+    }
     Keyboard.dismiss();
-    clearForm();
-    // setState(initialState);
-    console.log(state);
   };
 
   const setShowPassword = () => {

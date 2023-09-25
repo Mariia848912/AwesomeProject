@@ -40,11 +40,27 @@ export const authSignUpUser =
     }
   };
 
+// export const authSignInUser =
+//   ({ email, password }) =>
+//   async (dispatch, state) => {
+//     try {
+//       return await signInWithEmailAndPassword(email, password);
+//     } catch (error) {
+//       return error.code;
+//     }
+//   };
+
 export const authSignInUser =
   ({ email, password }) =>
   async (dispatch, state) => {
     try {
-      return await signInWithEmailAndPassword(email, password);
+      // return await signInWithEmailAndPassword(email, password);
+      const credentials = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      return credentials.user;
     } catch (error) {
       return error.code;
     }
