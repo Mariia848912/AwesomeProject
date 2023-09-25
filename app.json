@@ -18,14 +18,20 @@
       "supportsTablet": true
     },
     "android": {
-    "softwareKeyboardLayoutMode": "pan",
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mariia143.AwesomeProject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ec1bcadb-28de-405f-8632-75c3e6b5fe4b"
+      }
     }
   }
 }

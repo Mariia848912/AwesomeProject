@@ -13,17 +13,12 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-// const initialState = {
-//   email: "",
-//   password: "",
-// };
 import { useDispatch } from "react-redux";
 import { authSignInUser } from "../../redux/auth/operations";
 import { authStateChange } from "../../redux/auth/authSlice";
 
 export default function LoginScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  // const [state, setState] = useState(initialState);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
@@ -66,14 +61,10 @@ export default function LoginScreen() {
     setPassword(null);
   };
   const submitForm = () => {
-    // const { email, password } = state;
-  
     dispatch(authSignInUser({ email, password }));
     dispatch(authStateChange({ stateChange: true }));
     Keyboard.dismiss();
     clearForm();
-    // console.log(state);
-    // setState(initialState);
   };
 
   const showPassword = () => {

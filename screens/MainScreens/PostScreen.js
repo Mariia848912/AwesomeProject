@@ -14,7 +14,7 @@ import CommentScreen from "../nestedScreen/CommentScreen";
 import MapScreen from "../nestedScreen/MapsScreen";
 
 import { authSignOutUser } from "../../redux/auth/operations";
-//icons
+
 import { Feather } from "@expo/vector-icons";
 const NestedScreen = createStackNavigator();
 
@@ -26,9 +26,6 @@ export default function PostScreen({ navigation }) {
   const signOut = () => {
     dispatch(authSignOutUser());
   };
-  console.log("nikename", nikename);
-  console.log("userId", userId);
-  console.log("email", email);
 
   return (
     <View style={styles.container}>

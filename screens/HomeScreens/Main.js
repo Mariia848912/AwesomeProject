@@ -21,8 +21,6 @@ export default function Main() {
     dispatch(authStateChangeUser());
   }, []);
 
-  console.log("stateChange", stateChange);
-
   return (
     <View style={styles.container}>
       <NavigationContainer>

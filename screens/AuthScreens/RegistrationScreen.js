@@ -22,15 +22,9 @@ import { authStateChange } from "../../redux/auth/authSlice";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase/config";
 import { useDispatch } from "react-redux";
-// const initialState = {
-//   name: "",
-//   email: "",
-//   password: "",
-// };
 
 export default function RegistrationScreen() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  // const [state, setState] = useState(initialState);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [isFocusedName, setIsFocusedName] = useState(false);
@@ -82,13 +76,8 @@ export default function RegistrationScreen() {
   };
 
   const submitForm = async () => {
-    console.log("submitForm");
-    // const { name, email, password } = state;
-
-    console.log("avatar", avatar);
     const photo = await uploadImageToServer(avatar);
-    console.log("after uploadImageToServer");
-    console.log(photo, nikename, email, password);
+
     if (photo && nikename && email && password) {
       dispatch(authSignUpUser({ photo, nikename, email, password }));
       dispatch(authStateChange({ stateChange: true }));
@@ -103,7 +92,6 @@ export default function RegistrationScreen() {
   };
 
   const onLoadAvatar = async () => {
-    console.log("onLoadAvatar");
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
@@ -124,14 +112,12 @@ export default function RegistrationScreen() {
     }
   };
   const uploadImageToServer = async (avatar) => {
-    console.log("uploadImageToServer", avatar);
     const response = await fetch(avatar)
       .then((response) => response)
       .catch((error) => console.log(error));
-    console.log("response", response);
-    console.log("after response uploadImageToServer!!!!!!!!");
+
     const file = await response.blob();
-    console.log("after blob");
+
     const uniqueImageId = Date.now().toString();
     const path = `avatar/${uniqueImageId}.jpeg`;
 
@@ -140,11 +126,11 @@ export default function RegistrationScreen() {
     const metadata = {
       contentType: "avatar/jpeg",
     };
-    console.log("before uploadBytes");
+
     await uploadBytes(storageRef, file, metadata);
-    console.log("aafter uploadBytes");
+
     const downloadPhoto = await getDownloadURL(storageRef);
-    console.log("downloadPhoto");
+
     return downloadPhoto;
   };
 
@@ -168,13 +154,6 @@ export default function RegistrationScreen() {
                 : 60,
             }}
           >
-            {/* <View style={styles.boxAddPhoto}>
-              <View style={styles.photo}>
-                <View style={styles.icon}>
-                  <AntDesign name="pluscircleo" size={24} color="#FF6C00" />
-                </View>
-              </View>
-            </View> */}
             <View style={styles.addPhoto}>
               <Image style={styles.photo} source={{ uri: avatar }} />
               <TouchableOpacity
@@ -201,10 +180,6 @@ export default function RegistrationScreen() {
                 onBlur={() => setIsFocusedName(false)}
                 value={nikename}
                 onChangeText={setNikename}
-                // value={state.name}
-                // onChangeText={(value) =>
-                //   setState((prevState) => ({ ...prevState, name: value }))
-                // }
               />
             </View>
             <View style={{ marginBottom: 16 }}>
@@ -219,10 +194,6 @@ export default function RegistrationScreen() {
                 value={email}
                 autoComplete="email"
                 onChangeText={setEmail}
-                // value={state.email}
-                // onChangeText={(value) =>
-                //   setState((prevState) => ({ ...prevState, email: value }))
-                // }
               />
             </View>
             <View style={{ marginBottom: 43, position: "relative" }}>
@@ -237,10 +208,6 @@ export default function RegistrationScreen() {
                 onBlur={() => setIsFocusedPassword(false)}
                 value={password}
                 onChangeText={setPassword}
-                // value={state.password}
-                // onChangeText={(value) =>
-                //   setState((prevState) => ({ ...prevState, password: value }))
-                // }
               />
               <TouchableOpacity activeOpacity={0.8} style={styles.showBtn}>
                 <Text style={styles.textShowBtn} onPress={setShowPassword}>
@@ -272,14 +239,6 @@ export default function RegistrationScreen() {
   );
 }
 
-//  style={{
-//                 ...styles.wrapLogIn,
-//                 marginBottom: isShowKeyboard
-//                   ? Platform.OS === "ios"
-//                     ? 20
-//                     : 190
-//                   : 60,
-//               }}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -307,26 +266,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     backgroundColor: "#FFF",
   },
-  // boxAddPhoto: {
-  //   position: "absolute",
-  //   top: -60,
-  //   right: 0,
-  //   left: 0,
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  // },
-  // photo: {
-  //   position: "relative",
-  //   width: 120,
-  //   height: 120,
-  //   backgroundColor: "#F6F6F6",
-  //   borderRadius: 16,
-  // },
-  // icon: {
-  //   position: "absolute",
-  //   right: -12,
-  //   bottom: 14,
-  // },
   addPhoto: {
     width: "100%",
     position: "relative",
