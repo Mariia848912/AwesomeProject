@@ -35,7 +35,6 @@ export const authSignUpUser =
 
       return user;
     } catch (error) {
-      // return error.code;
       console.log(error);
     }
   };
